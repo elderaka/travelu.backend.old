@@ -1,53 +1,50 @@
 <?php
 
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Pelanggan;
-use Validator;
-use File;
 
-class LogController extends Controller
+class PelangganController extends Controller
 {
     public function index(Request $request)
     {
-        // abort_if_user_cannot(['*.read']);
+        abort_if_user_cannot(['*.read']);
         $data['data'] = Pelanggan::get();
-        return view('admin.admin.index',$data);
+        return view('admin.pelanggan.index',$data);
     }
 
     public function create(Request $request) {
         $valid = $request->validate([
             'name' => 'required',
             'email' => 'required',
-            'password' => 'required',
+            'no_telp' => 'required',
         ]);
         if($request->id == "0"){
             $dataInsert['name'] = $request->name;
             $dataInsert['email'] = $request->email;
-            $dataInsert['password'] = $request->password;
+            $dataInsert['no_telp'] = $request->no_telp;
             $dataInsert['created_at'] = date('Y-m-d H:i:s');
             Pelanggan::insert($dataInsert);
         }else{
             $dataUpdate['name'] = $request->name;
             $dataUpdate['email'] = $request->email;
-            $dataUpdate['password'] = $request->password;
-            $dataUpdate['created_at'] = date('Y-m-d H:i:s');
+            $dataUpdate['no_telp'] = $request->no_telp;
+            $dataUpdate['updated_at'] = date('Y-m-d H:i:s');
 
             $update = Pelanggan::findOrFail($request->id);
             $update->update($dataUpdate);
         }
 
-        return redirect()->route('admin-travelu')->with('status', 'Data Berhasil disimpan!');
+        return redirect()->route('pelanggan-travelu')->with('status', 'Data Berhasil disimpan!');
     }
 
     public function delete($id){
         $data = Pelanggan::findOrFail($id);
         $data->delete();
-        return redirect()->route('admin-travelu')->with('status', 'Data Berhasil dihapus!');
+        return redirect()->route('pelanggan-travelu')->with('status', 'Data Berhasil dihapus!');
     }
 
 
@@ -66,7 +63,7 @@ class LogController extends Controller
 
     public function read($id)
     {
-        return \DB::table('admin')
+        return \DB::table('pelanggan')
                 ->where('id',$id)
                 ->get();
     }

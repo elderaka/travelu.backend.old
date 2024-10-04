@@ -5,47 +5,53 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Admin;
+use App\Models\BannerHomePage;
 
-        
-class AdminController        extends Controller
+class BannerHomePageController extends Controller
 {
     public function index(Request $request)
     {
         // abort_if_user_cannot(['*.read']);
-        $data['data'] = Admin::get();
-        return view('admin.admin.index',$data);
+        $data['data'] = BannerHomePage::get();
+        return view('admin.bannerhome.index',$data);
     }
 
     public function create(Request $request) {
         $valid = $request->validate([
+            'img' => 'required',
             'name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
+            'status' => 'required',
         ]);
         if($request->id == "0"){
             $dataInsert['name'] = $request->name;
-            $dataInsert['email'] = $request->email;
-            $dataInsert['password'] = $request->password;
+            $dataInsert['status'] = $request->status;
             $dataInsert['created_at'] = date('Y-m-d H:i:s');
-            Admin::insert($dataInsert);
+
+            if($request->file('img')){
+                $dataInsert['img'] = $this->upload($request->file('img'),'/'.$name.'/bannerhome/','img_');
+            }
+
+            BannerHomePage::insert($dataInsert);
         }else{
             $dataUpdate['name'] = $request->name;
-            $dataUpdate['email'] = $request->email;
-            $dataUpdate['password'] = $request->password;
-            $dataUpdate['created_at'] = date('Y-m-d H:i:s');
+            $dataUpdate['status'] = $request->status;
+            $dataUpdate['updated_at'] = date('Y-m-d H:i:s');
 
-            $update = Admin::findOrFail($request->id);
+            $update = BannerHomePage::findOrFail($request->id);
             $update->update($dataUpdate);
+
+            if($request->file('img')){
+                $dataUpdate['img'] = $this->upload($request->file('img'),'/'.$name.'/bannerhome/','img_');
+            }
         }
 
-        return redirect()->route('admin-travelu')->with('status', 'Data Berhasil disimpan!');
+        return redirect()->route('bannerhome-travelu')->with('status', 'Data Berhasil disimpan!');
     }
 
     public function delete($id){
-        $data = Admin::findOrFail($id);
+        $data = BannerHomePage::findOrFail($id);
         $data->delete();
-        return redirect()->route('admin-travelu')->with('status', 'Data Berhasil dihapus!');
+        return redirect()->route('bannerhome-travelu')->with('status', 'Data Berhasil dihapus!');
     }
 
 
@@ -64,7 +70,7 @@ class AdminController        extends Controller
 
     public function read($id)
     {
-        return \DB::table('admin')
+        return \DB::table('m_banner_home')
                 ->where('id',$id)
                 ->get();
     }
