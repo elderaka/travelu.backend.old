@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Admin extends Model
 {
-    use HasRole;
 
     protected $guarded = [];
     public $guard_name = 'web';

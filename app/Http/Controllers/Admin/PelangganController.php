@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Pelanggan;
 use Validator;
 use File;
 
@@ -13,7 +14,8 @@ class LogController extends Controller
 {
     public function index(Request $request)
     {
-        abort_if_user_cannot(['*.read']);
+        // abort_if_user_cannot(['*.read']);
+        $data['data'] = Pelanggan::get();
         return view('admin.admin.index',$data);
     }
 
@@ -28,14 +30,14 @@ class LogController extends Controller
             $dataInsert['email'] = $request->email;
             $dataInsert['password'] = $request->password;
             $dataInsert['created_at'] = date('Y-m-d H:i:s');
-            Admin::insert($dataInsert);
+            Pelanggan::insert($dataInsert);
         }else{
             $dataUpdate['name'] = $request->name;
             $dataUpdate['email'] = $request->email;
             $dataUpdate['password'] = $request->password;
             $dataUpdate['created_at'] = date('Y-m-d H:i:s');
 
-            $update = Admin::findOrFail($request->id);
+            $update = Pelanggan::findOrFail($request->id);
             $update->update($dataUpdate);
         }
 
@@ -43,7 +45,7 @@ class LogController extends Controller
     }
 
     public function delete($id){
-        $data = Admin::findOrFail($id);
+        $data = Pelanggan::findOrFail($id);
         $data->delete();
         return redirect()->route('admin-travelu')->with('status', 'Data Berhasil dihapus!');
     }

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PelangganController;
 
 /*
@@ -16,6 +17,7 @@ use App\Http\Controllers\Admin\PelangganController;
 */
 
 Route::prefix('/')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('admin', [AdminController::class, 'index'])->name('admin.admin.index');
     Route::get('admin/create', [AdminController::class, 'create'])->name('admin.admin.create');
     Route::get('admin/delete', [AdminController::class, 'delete'])->name('admin.admin.delete');

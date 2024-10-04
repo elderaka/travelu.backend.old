@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Order;
 use Validator;
 use File;
 
@@ -13,7 +14,8 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        abort_if_user_cannot(['*.read']);
+        // abort_if_user_cannot(['*.read']);
+        $data['data'] = Order::get();
         return view('admin.order.index',$data);
     }
 

@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Admin;
+
 use Validator;
 use File;
 
@@ -13,7 +15,8 @@ class AdminController extends Controller
 {
     public function index(Request $request)
     {
-        abort_if_user_cannot(['*.read']);
+        // abort_if_user_cannot(['*.read']);
+        $data['data'] = Admin::get();
         return view('admin.admin.index',$data);
     }
 

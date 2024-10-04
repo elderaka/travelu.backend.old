@@ -6,9 +6,8 @@ namespace App\Models;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 
-class Admin extends Model
+class Pelanggan extends Model
 {
-    use HasRole;
 
     protected $guarded = [];
     public $guard_name = 'web';
